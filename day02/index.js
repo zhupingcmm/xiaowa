@@ -151,26 +151,23 @@
         }
 
 
-        function Hero () {
-            this.img =  heroImg;
-            this.context= context;
-            this.imgPos={
+        var hero = {
+            img: heroImg,
+            context: context,
+            imgPos: {
                 x: 0,
                 y: 0,
                 width: 32,
                 height: 32
-            };
+            },
 
-            this.rect = {
+            rect: {
                 x: 0,
                 y: 0,
                 width: 40,
                 height: 40
-            }
-        }
+            },
 
-
-        Hero.prototype = {
             draw: draw,
             move:move,
         };
@@ -179,48 +176,29 @@
             return this.rect;
         }
 
-        Monster.prototype = {
-            draw: draw,
-            getRect: getRect,
-        };
-
-        function Monster (initPos) {
-            this.img = allSpriteImg;
-            this.context= context;
-            this.imgPos={
+        var monster = {
+            img: allSpriteImg,
+            context: context,
+            imgPos: {
                 x: 858,
                 y: 529,
                 width: 32,
                 height: 32
-            };
+            },
 
-            this.rect = {
-                x: initPos.x,
-                y: initPos.y,
+            rect: {
+                x: 100,
+                y: 100,
                 width: 40,
                 height: 40
-            };
-        }
+            },
 
-        RedMonster.prototype = Object.create(Monster.prototype);
-        function RedMonster(initPos){
-            Monster.call(this,initPos);
-            this.imgPos={
-                x: 858,
-                y: 497,
-                width: 32,
-                height: 32
-            };
-        }
+            draw: draw,
+            getRect: getRect,
+        };
 
-
-
-        var hero = new Hero();
         hero.draw();
-        var monster = new Monster({x:100,y:100});
         monster.draw();
-        var redMonster = new Monster({x:150,y:150});
-        redMonster.draw();
 
         document.addEventListener('keydown', (e) => {
             if (e) {
