@@ -213,8 +213,6 @@
             };
         }
 
-
-
         var hero = new Hero();
         hero.draw();
         var monster = new Monster({x:100,y:100});

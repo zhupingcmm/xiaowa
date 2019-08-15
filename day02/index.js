@@ -1,29 +1,29 @@
 (function () {
     function prepare() {
         // load img task
-       const imgTask = (img,src)=>{
-           new Promise((resolve,reject)=>{
-               img.onload = resolve;
-               img.onerror = reject;
-               img.src = src;
-           })
-       };
-       const context = document.getElementById('content').getContext('2d');
-       const heroImg  = new Image();
-       const allSpriteImg = new Image();
+        const imgTask = (img,src)=>{
+            new Promise((resolve,reject)=>{
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = src;
+            })
+        };
+        const context = document.getElementById('content').getContext('2d');
+        const heroImg  = new Image();
+        const allSpriteImg = new Image();
 
-       const allResourceTask = Promise.all([
-           imgTask(heroImg,'./hero.png'),
-           imgTask(allSpriteImg,'./all.jpg')
-       ]);
+        const allResourceTask = Promise.all([
+            imgTask(heroImg,'./hero.png'),
+            imgTask(allSpriteImg,'./all.jpg')
+        ]);
 
-       return {
-           getResource(callBack){
-               allResourceTask.then(()=>{
-                   callBack && callBack(context,heroImg,allSpriteImg)
-               })
-           }
-       }
+        return {
+            getResource(callBack){
+                allResourceTask.then(()=>{
+                    callBack && callBack(context,heroImg,allSpriteImg)
+                })
+            }
+        }
     }
 
     function drawHero(context, heroImg, allSpriteImg) {
@@ -151,23 +151,26 @@
         }
 
 
-        var hero = {
-            img: heroImg,
-            context: context,
-            imgPos: {
+        function Hero () {
+            this.img =  heroImg;
+            this.context= context;
+            this.imgPos={
                 x: 0,
                 y: 0,
                 width: 32,
                 height: 32
-            },
+            };
 
-            rect: {
+            this.rect = {
                 x: 0,
                 y: 0,
                 width: 40,
                 height: 40
-            },
+            }
+        }
 
+
+        Hero.prototype = {
             draw: draw,
             move:move,
         };
@@ -176,29 +179,46 @@
             return this.rect;
         }
 
-        var monster = {
-            img: allSpriteImg,
-            context: context,
-            imgPos: {
-                x: 858,
-                y: 529,
-                width: 32,
-                height: 32
-            },
-
-            rect: {
-                x: 100,
-                y: 100,
-                width: 40,
-                height: 40
-            },
-
+        Monster.prototype = {
             draw: draw,
             getRect: getRect,
         };
 
+        function Monster (initPos) {
+            this.img = allSpriteImg;
+            this.context= context;
+            this.imgPos={
+                x: 858,
+                y: 529,
+                width: 32,
+                height: 32
+            };
+
+            this.rect = {
+                x: initPos.x,
+                y: initPos.y,
+                width: 40,
+                height: 40
+            };
+        }
+
+        RedMonster.prototype = Object.create(Monster.prototype);
+        function RedMonster(initPos){
+            Monster.call(this,initPos);
+            this.imgPos={
+                x: 858,
+                y: 497,
+                width: 32,
+                height: 32
+            };
+        }
+
+        var hero = new Hero();
         hero.draw();
+        var monster = new Monster({x:100,y:100});
         monster.draw();
+        var redMonster = new Monster({x:150,y:150});
+        redMonster.draw();
 
         document.addEventListener('keydown', (e) => {
             if (e) {
