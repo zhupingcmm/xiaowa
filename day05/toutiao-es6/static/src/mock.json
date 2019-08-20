@@ -1,14 +1,12 @@
 {
     "data": [
         {
-            "type": "multiplePic",
+            "type": "bigPic",
             "data": {
                 "articleUrl": "http://m.ce.cn/ttt/201907/10/t20190710_32584185.shtml",
                 "title": "新职业从业者,新职业从业者月,月收入,美团研究院,新职业从业者月收入",
                 "imageList": [
-                    "https://p3.pstatp.com/list/pgc-image/RVojrjD4SJqQCB",
-                    "https://p3.pstatp.com/list/pgc-image/RVojrjZ3vY4hD2",
-                    "https://p3.pstatp.com/list/pgc-image/RVojrjtB57pSao"
+                    "http://s2.pstatp.com/site/promotion/landing_page/img/游戏1_0c9cb2babaf3f50d4082b056ee810b66.jpg"
                 ]
             }
         },

@@ -1,0 +1,91 @@
+<template>
+    <div class="item multiple-image">
+        <h3>
+            agriculture ye cha zhu jia
+        </h3>
+        <div class="image-list">
+            <label>input city: </label>
+            <label>
+                <input type="text" v-on:input="oninput">
+            </label>
+            <span>
+                area :{{area}}
+            </span>
+        </div>
+        <div>
+            pic price:{{price| addCount}}
+        </div>
+    </div>
+</template>
+
+<script>
+    const createThrottle =(delay =1000)=>{
+        let status = 'START';
+        return function (fn) {
+            if(status === "WAITING"){
+                return
+            }
+            status = 'WAITING';
+            setTimeout(()=>{
+                fn && fn();
+                status = 'START'
+            }, delay);
+        }
+    };
+
+    const createDebounce =(delay=1000)=>{
+        let timer = null;
+        return function (fn) {
+            if(timer !== null){
+                clearTimeout(timer)
+            }
+            timer = setTimeout(()=>{
+              fn && fn()
+          },delay);
+        };
+    };
+    export default {
+        data(){
+          return {
+              area:'beijing',
+              price:0,
+              debounce:createDebounce(2000)
+          }
+        },
+        // created(){
+        //   this.$watch('area',area=>{
+        //     this.queryPrice(area)
+        //   })
+        // },
+        watch:{
+          area(newArea, oldArea){
+              console.log(newArea,oldArea);
+              this.queryPrice(newArea)
+          }
+        },
+        methods: {
+            oninput(e){
+                console.log(this.debounce);
+                this.debounce(()=>{
+                    this.area = e.data;
+                });
+            },
+            queryPrice(area){
+                fetch('/price?area' + area)
+                    .then(res=>res.json())
+                    .then(priceRes=>{
+                        console.log(priceRes);
+                        this.price = priceRes.infos[0].price;
+                    })
+            },
+            changePosition(){
+                this.area = '深圳'
+            }
+        },
+        filters:{
+            addCount(price){
+                return price + '$'
+            }
+        }
+    }
+</script>

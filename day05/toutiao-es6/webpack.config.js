@@ -23,6 +23,6 @@ module.exports = {
 	plugins:[
 		new CleanWebpackPlugin()
 	],
-	watch:true,
+	// watch:true,
 	devtool: "inline-source-map",
 };
