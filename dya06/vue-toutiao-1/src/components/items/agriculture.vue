@@ -3,6 +3,7 @@
         <h3>
             agriculture ye cha zhu jia
         </h3>
+        <echarts></echarts>
         <div class="image-list">
             <label>input city: </label>
             <label>
@@ -12,6 +13,7 @@
                 area :{{area}}
             </span>
         </div>
+        <div v-echarts></div>
         <div>
             pic price:{{price| addCount}}
         </div>
@@ -19,37 +21,12 @@
 </template>
 
 <script>
-    const createThrottle =(delay =1000)=>{
-        let status = 'START';
-        return function (fn) {
-            if(status === "WAITING"){
-                return
-            }
-            status = 'WAITING';
-            setTimeout(()=>{
-                fn && fn();
-                status = 'START'
-            }, delay);
-        }
-    };
-
-    const createDebounce =(delay=1000)=>{
-        let timer = null;
-        return function (fn) {
-            if(timer !== null){
-                clearTimeout(timer)
-            }
-            timer = setTimeout(()=>{
-              fn && fn()
-          },delay);
-        };
-    };
     export default {
         data(){
           return {
               area:'beijing',
               price:0,
-              debounce:createDebounce(2000)
+              debounce:this.createDebounce(2000)
           }
         },
         // created(){
@@ -59,7 +36,7 @@
         // },
         watch:{
           area(newArea, oldArea){
-              console.log(newArea,oldArea);
+              //console.log(newArea,oldArea);
               this.queryPrice(newArea)
           }
         },
@@ -80,12 +57,13 @@
             },
             changePosition(){
                 this.area = '深圳'
-            }
+            },
         },
         filters:{
             addCount(price){
                 return price + '$'
             }
-        }
+        },
+
     }
 </script>

@@ -14,3 +14,14 @@
         props:['title','imageList']
     }
 </script>
+
+<style scoped>
+    @import "../../index.css";
+    .multiple-image h3 {
+        font-size: 17px;
+    }
+
+    .multiple-image .image-list img {
+        width: 33%;
+    }
+</style>
