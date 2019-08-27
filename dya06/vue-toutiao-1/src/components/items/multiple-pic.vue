@@ -1,5 +1,5 @@
 <template>
-    <div class="item multiple-image">
+    <div class="item multiple-image" v-on:click="skip">
         <h3>
             {{title}}
         </h3>
@@ -10,8 +10,10 @@
 </template>
 
 <script>
+    import BaseOptions from './base.js';
     export default {
-        props:['title','imageList']
+        props:['title','imageList'],
+        extends:BaseOptions
     }
 </script>
 

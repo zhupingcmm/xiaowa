@@ -1,5 +1,5 @@
 <template>
-    <div class="item single-pic">
+    <div class="item single-pic" v-on:click="skip">
         <div class="content">
                     <span>
                         {{title}}}zhuping
@@ -13,6 +13,7 @@
 </template>
 
 <script >
+    import BaseOptions from './base.js'
     export default {
         props:['title','imageList'],
         computed:{
@@ -27,7 +28,8 @@
             // changeName(){
             //     this.title = 'xiaowa'
             // }
-        }
+        },
+        extends:BaseOptions
     }
 </script >
 

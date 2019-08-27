@@ -1,11 +1,11 @@
 
 import MultiplePic from './multiple-pic.vue'
 import SinglePic from './single-pic.vue'
-// import Agriculture from './agriculture.vue'
+import Agriculture from './agriculture.vue'
 export {
     MultiplePic,
     SinglePic,
-    // Agriculture
+    Agriculture
 };
 
 

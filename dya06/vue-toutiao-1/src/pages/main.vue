@@ -1,33 +1,34 @@
 <template>
-    <div>
-
-            <!--<SinglePic v-bind="item.data" v-if="item.type ==='singlePic'"></SinglePic>-->
-            <!--<MultiplePic v-bind="item.data" v-else-if="item.type === 'multiplePic'"></MultiplePic>-->
-            <!--<Agriculture v-bind="item.data" v-else></Agriculture>-->
-            <Tap>
-                <template v-slot: header>
-                    <div>
-                        <span>推荐</span>
-                        <span>热点</span>
-                        <span>农业</span>
-                    </div>
+    <article>
+        <keep-alive>
+            <component
+                    v-bind:is="page"
+                    v-bind:tabs="tabs"
+                    v-bind:curTab.sync = "curTab"
+                    v-on:more = "showMoreTab"
+            >
+                <template v-slot:content="{list}">
+                    <component
+                            v-bind:key="item.type | generatorKey"
+                            v-for="item in list"
+                            v-bind:is="item.type | formatComponentName"
+                            v-bind="item.data"
+                    >
+                    </component>
                 </template>
-                <template v-slot:content>
-                    <div v-for="item in list">
-                        <component
-                                v-bind:is="item.type | formatComponentName"
-                                v-bind="item.data">
-                        </component>
-                    </div>
-                </template>
-            </Tap>
+            </component>
+        </keep-alive>
+    </article>
 
-    </div>
 </template>
 
 <script>
     import * as components from '../components/items';
-    import Tap from '../components/tab.vue'
+    import Tab from '../components/tab.vue';
+    import {Tabs} from "../config";
+
+    console.log("Tap:",Tab);
+
     const convertModule2Obj = moduleObj =>{
       let result = {};
       for(let moduleName in moduleObj){
@@ -38,34 +39,80 @@
 
     export default {
         components:{
+            Tab,
             ...convertModule2Obj(components),
-            Tap,
-            Agriculture: ()=>import("../components/items/agriculture.vue")
+            Setting: () => ({
+                component: import('./setting.vue'),
+            }),
+            // Agriculture: ()=>import("../components/items/agriculture.vue")
         },
         data(){
+
+            const constructTabs = Tabs => {
+                let result = {};
+                for (let name in Tabs) {
+                    result[name] = {
+                        label: Tabs[name],
+                        index: 0,
+                        list: []
+                    };
+                }
+                return result;
+            };
+
             return {
-               list:[]
+                content: '这是一个vue的页面',
+                tabs:constructTabs(Tabs),
+                page: 'Tab',
+                curTab: 'agriculture',
             };
         },
         created(){
-          fetch('/list?tab=agriculture').then(res=>
-              res.json()
-          ).then(
-              ({data})=>{
-                 this.list = data;
-                 console.log(data)
-              }
-          )
+            this.getListData(this.curTab)
+                .then(listData=>{
+                   this.setTabsData(this.curTab,{
+                       list:listData
+                   })
+                });
         },
         methods:{
             onReachBottom(){
                 console.log('loading')
+            },
+            getListData(tapName){
+                const tab = this.tabs[this.curTab];
+
+                return fetch(
+                    `/list?tab=${tapName}&index=${tab.index}`
+                )
+                    .then(res => res.json())
+                    .then(res => res.data);
+            },
+            setTabsData(tabName,data){
+                this.$set(this.tabs,tabName,{
+                    ...this.tabs[tabName],
+                    ...data
+                })
+            },
+            showMoreTab(event){
+                console.log('event',event);
+                if(event === 'hide'){
+                    this.page = 'Tap'
+                }else {
+                    // this.page ='setting'
+                    //window.location.hash = '#/setting'
+                    console.log("this.$router:",this.$router);
+                    this.$router.push('/page/setting');
+                }
             }
         },
         filters:{
             formatComponentName(componentName){
                 //console.log('componentName:',componentName);
                 return componentName.replace(/^\w/g,name=>name.toUpperCase());
+            },
+            generatorKey(type){
+                return type + Math.floor(Math.random()*100 +1);
             }
         },
 
